@@ -1,1 +1,18 @@
-console.log('Task Manager App')
+const express = require("express");
+const app = express();
+const tasksRoutes = require("./routes/tasks");
+
+// middleware
+app.use(express.json());
+
+// routes
+app.get("/hello", (req, res) => {
+  res.send("Task Manager App");
+});
+
+app.use("/api/v1/tasks", tasksRoutes);
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, (req, res) => {
+  console.log("The server is listening on port 3001...");
+});
