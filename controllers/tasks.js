@@ -3,7 +3,9 @@ const Task = require("../models/Task");
 const getAllTasks = async (req, res) => {
   try {
     const tasks = await Task.find({});
-    res.status(200).json({ tasks });
+    // there are many options for a response
+    res.status(200).json({ tasks }); // sends all tasks
+    // res.status(200).json({ tasks, amount:tasks.length }); sends a certain number of tasks
   } catch (error) {
     res.status(500).json({ msg: error });
   }
@@ -23,10 +25,12 @@ const getTask = async (req, res) => {
     // makes the req.params.id variable taskID
     const { id: taskID } = req.params;
     const task = await Task.findOne({ _id: taskID });
+
     if (!task) {
       // deals with ids of the right length that do not exist
       return res.status(404).json({ msg: `No task with the ID: ${taskID}` });
     }
+
     res.status(200).json({ task });
   } catch (error) {
     // deals with ids that are not the right length
@@ -42,10 +46,13 @@ const updateTask = async (req, res) => {
       new: true,
       // runs the set validators for the schema
       runValidators: true,
+      // to make it a put to replace and not just change, need to have overwrite: true
     });
+
     if (!task) {
       return res.status(404).json({ msg: `No task with the ID: ${taskID}` });
     }
+
     res.status(200).json({ task });
   } catch (error) {
     res.status(500).json({ msg: error });
@@ -56,6 +63,7 @@ const deleteTask = async (req, res) => {
   try {
     const { id: taskID } = req.params;
     const task = await Task.findOneAndDelete({ _id: taskID });
+
     if (!task) {
       return res.status(404).json({ msg: `No task with the ID: ${taskID}` });
     }
